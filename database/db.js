@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+mongoose.set('strictQuery', false); // Establece la opción strictQuery en false
+
 const url = 'mongodb://localhost:27017/mern'
 mongoose.connect(url)
 

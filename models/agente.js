@@ -7,7 +7,7 @@ const agente = new Schema(
       cedula: {type:Number},
       number: {type:Number},
       email: {type:String},
-      password: {type:String}
+      password: {type:String, required: true}
     },
     {collection: 'agentes'}
 )

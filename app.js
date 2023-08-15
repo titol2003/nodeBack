@@ -8,6 +8,7 @@ import {connection} from "./database/db.js"
 import inmuebleRoutes from './routes/routes.js';
 import agenteRoutes from './routes/routeAgente.js'
 import authRoutes from './routes/auth.js';
+import Correos from './routes/email.js';
 import config from "./config.js";
 
 const app = express();
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
+app.use('/email',Correos)
 app.use('/inmuebles', inmuebleRoutes)
 app.use(agenteRoutes)
 app.use(authRoutes)

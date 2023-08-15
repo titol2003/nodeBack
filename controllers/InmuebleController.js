@@ -6,7 +6,7 @@ import InmuebleModel from "../models/InmuebleModel.js";
 //Mostrar todos los Inmuebles
 export const getAllInmuebles = async (req, res) => {
   try {
-    const inmuebles = await InmuebleModel.find();
+    const inmuebles = await InmuebleModel.find().populate("agente")
     res.status(200).json(inmuebles);
   } catch (error) {
     res.json({ message: error.message });
@@ -16,9 +16,10 @@ export const getAllInmuebles = async (req, res) => {
 export const getInmueble = async (req, res) => {
   try {
     const id = req.params.id;
-    await InmuebleModel.findById({ _id: id }).then((inmueble) => {
+    const inmueble =  await InmuebleModel.findById({ _id: id }).populate("agente")
+    
       res.status(200).json(inmueble);
-    });
+
   } catch (error) {
     res.json({ message: error.message });
   }
@@ -41,7 +42,7 @@ export const createInmueble = async (req, res) => {
     ubicacion,
     negocio,
     precio,
-    agentes,
+    agente,
   } = req.body;
   try {
     object.descript1 = descript1;
@@ -58,7 +59,7 @@ export const createInmueble = async (req, res) => {
     object.ubicacion = ubicacion;
     object.negocio = negocio;
     object.precio = precio;
-    object.agentes = agentes;
+    object.agente = agente;
 
     if (req.files) {
       const image = req.files.image;

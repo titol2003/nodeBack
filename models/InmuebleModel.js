@@ -18,10 +18,11 @@ const InmuebleSchema = new Schema(
       negocio: {type:String},
       precio: {type:Number},
       image: {type:String},
-      images: {
-        type: Array
-      },
-      agentes: {type:String}
+      images: {type: Array},
+      agente: {
+        type:Schema.Types.ObjectId,
+        ref: 'Agente',
+      }
 
     },
     {collection: 'inmuebles'}

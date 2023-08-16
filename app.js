@@ -30,7 +30,7 @@ app.set("port", config.port);
 await connection()
 
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.send("hola mundo");
 });
 
 app.use('/email',Correos)
@@ -40,8 +40,8 @@ app.use(authRoutes)
 
 
 
-app.listen(8000, ()=>{
-    console.log('Server UP running in http://localhost:8000/')
+app.listen(app.get("port"), ()=>{
+    console.log('Server UP running in port ' + app.get("port"))
 })
 
 export default app;

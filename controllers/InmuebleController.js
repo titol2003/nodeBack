@@ -1,65 +1,127 @@
 //importamos el Modelo
 import InmuebleModel from "../models/InmuebleModel.js";
+import jwt from "jsonwebtoken";
+import config from "../config.js";
 
 //** Métodos para el CRUD **/
 
-
 //Mostrar todos los Inmuebles
 export const getAllInmuebles = async (req, res) => {
-    try {
-        const inmuebles = await InmuebleModel.find()
-        res.status(200).json(inmuebles)
-    } catch (error) {
-        res.json( {message: error.message} )
-    }
-}
+  try {
+    const inmuebles = await InmuebleModel.find().populate("agente")
+    res.status(200).json(inmuebles);
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};
 //Mostrar un Inmueble
 export const getInmueble = async (req, res) => {
-        try {
-            const id = req.params.id
-            await InmuebleModel.findById( {_id:id} ).then( (inmueble) => {
-                res.status(200).json(inmueble)
-            })        
-        } catch (error) {
-            res.json( {message: error.message} )
-        }
-}
+  try {
+    const id = req.params.id;
+    const inmueble =  await InmuebleModel.findById({ _id: id }).populate("agente")
+    
+      res.status(200).json(inmueble);
+
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};
 //Crear un Inmueble
 export const createInmueble = async (req, res) => {
-    try {
-       await InmuebleModel.create(req.body)
-       res.status(200).json({
-           "message":"¡Inmueble creado correctamente!"
-       })
-    } catch (error) {
-        res.json( {message: error.message} )
+  const object = {};
+  const {
+    descript1,
+    descript2,
+    description,
+    ventajas,
+    area,
+    habitaciones,
+    estrato,
+    baños,
+    inmueble,
+    fondo,
+    frente,
+    ubicacion,
+    negocio,
+    precio,
+    token,
+  } = req.body;
+  try {
+    const { id } = jwt.verify(token, config.secretKey)
+    
+    if(!id)throw new Error("Por favor verifique su sesion")
+
+    object.descript1 = descript1;
+    object.descript2 = descript2;
+    object.description = description;
+    object.ventajas = ventajas;
+    object.area = area;
+    object.habitaciones = habitaciones;
+    object.estrato = estrato;
+    object.baños = baños;
+    object.inmueble = inmueble;
+    object.fondo = fondo;
+    object.frente = frente;
+    object.ubicacion = ubicacion;
+    object.negocio = negocio;
+    object.precio = precio;
+    object.agente = id;
+
+    if (req.files) {
+      const image = req.files.image;
+      const images = req.files.images;
+      const date = new Date();
+
+      if (image) {
+        const file = Buffer.from(image.data).toString("base64");
+        object.image = file;
+      }
+
+      if (images) {
+        const files = [];
+        for (let i = 0; i < images.length; i++) {
+          const file = Buffer.from(images[i].data).toString("base64");
+
+          files.push(file);
+        }
+        object.images = files;
+      }
     }
-}
+
+    await InmuebleModel.create(object);
+    res.status(200).json({
+      message: "¡Inmueble creado correctamente!",
+    });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 //Actualizar un Inmueble
 export const updateInmueble = async (req, res) => {
-    try {
-        const id = req.params.id
-        await InmuebleModel.updateOne({_id: id}, req.body).then( res => {
-            console.log(res)
-        })
-        res.status(200).json({
-            "message":"¡inmueble actualizado correctamente!"
-        })
-    } catch (error) {
-        res.json( {message: error.message} )
-    }
-}
+  try {
+    const id = req.params.id;
+    await InmuebleModel.updateOne({ _id: id }, req.body).then((res) => {
+      console.log(res);
+    });
+    res.status(200).json({
+      message: "¡inmueble actualizado correctamente!",
+    });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};
 //Eliminar un Inmueble
 export const deleteInmueble = async (req, res) => {
-    try {
-        const id = req.params.id
-        await InmuebleModel.deleteOne({ _id : id }).then( res => {
-            console.log(res)
-        })
-        res.status(200).json({
-            "message":"¡inmueble eliminado correctamente!"
-        })
-    } catch (error) {
-        res.json( {message: error.message} )
-    }
-}
+  try {
+    const id = req.params.id;
+    await InmuebleModel.deleteOne({ _id: id }).then((res) => {
+      console.log(res);
+    });
+    res.status(200).json({
+      message: "¡inmueble eliminado correctamente!",
+    });
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};

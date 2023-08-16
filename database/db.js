@@ -1,9 +1,15 @@
-import mongoose from 'mongoose'
-const url = 'mongodb://localhost:27017/mern'
-mongoose.connect(url)
+import pkg from 'mongoose';
+const { connect } = pkg;
 
-const db = mongoose.connection
-db.on('open', ()=>{ console.log("¡Conectado a MongoDB!")} )
-db.on('error', ()=>{ console.log("¡Error al conectar a MongoDB!")} )
+import config from "../config.js";
 
-export default db
+const URI = `${config.sgbd}://${config.dbUser}:${config.dbPassword}@${config.dbHost}/${config.database}` // mongodb+srv://<user>:<password>@<localhost>/<database>?retryWrites=true&w=majority
+
+export const connection = async () => {
+    try {
+        const db = await connect(URI, config.options);
+        console.log("Connected to ", db.connection.name);
+    } catch (error) {
+        console.error(error);
+    }
+}

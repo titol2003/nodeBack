@@ -1,11 +1,15 @@
-import mongoose from 'mongoose'
-mongoose.set('strictQuery', false); // Establece la opción strictQuery en false
+import pkg from 'mongoose';
+const { connect } = pkg;
 
-const url = 'mongodb://localhost:27017/mern'
-mongoose.connect(url)
+import config from "../config.js";
 
-const db = mongoose.connection
-db.on('open', ()=>{ console.log("¡Conectado a MongoDB!")} )
-db.on('error', ()=>{ console.log("¡Error al conectar a MongoDB!")} )
+const URI = `${config.sgbd}://${config.dbUser}:${config.dbPassword}@${config.dbHost}/${config.database}` // mongodb+srv://<user>:<password>@<localhost>/<database>?retryWrites=true&w=majority
 
-export default db
+export const connection = async () => {
+    try {
+        const db = await connect(URI, config.options);
+        console.log("Connected to ", db.connection.name);
+    } catch (error) {
+        console.error(error);
+    }
+}

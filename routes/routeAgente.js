@@ -1,11 +1,20 @@
-import express from 'express'
-import { getAllAgentes, getAgente,createAgente, updateAgente,deleteAgente  } from '../controllers/AgenteController.js'
-const router = express.Router()
+import { Router } from "express";
 
-router.get('/', getAllAgentes)
-router.get('/:id', getAgente)
-router.post('/', createAgente)
-router.put('/:id', updateAgente)
-router.delete('/:id', deleteAgente)
+import {
+    getAllAgente,
+    getAgente,
+    updateAgente,
+    createAgente,
+    deleteAgente,
+} from "../controllers/AgenteController.js";
 
-export default router
+const router = Router({ caseSensitive: true });
+
+router
+    .get("/agente", getAllAgente)
+    .get("/agente/:id", getAgente)
+    .post("/agente", createAgente)
+    .patch("/agente/:id", updateAgente)
+    .delete("/agente/:id", deleteAgente);
+
+export default router;

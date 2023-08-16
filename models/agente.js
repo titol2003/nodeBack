@@ -4,11 +4,10 @@ const Schema = mongoose.Schema
 const agente = new Schema(
     {
       name: {type:String},       
-      lastname: {type:String},
       cedula: {type:Number},
       number: {type:Number},
       email: {type:String},
-      password: {type:String}
+      password: {type:String, required: true}
     },
     {collection: 'agentes'}
 )

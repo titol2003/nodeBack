@@ -9,12 +9,7 @@ export default async function login(req, res){
     try{
         const {email, password} = req.body
 
-        console.log("Received email:", email);
-        console.log("Received password:", password);
-
         const document = await Agente.findOne({"email": email})
-
-        console.log("Fetched document:", document);
 
         if(document != null){
            

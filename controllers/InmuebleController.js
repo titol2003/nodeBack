@@ -1,5 +1,7 @@
 //importamos el Modelo
 import InmuebleModel from "../models/InmuebleModel.js";
+import jwt from "jsonwebtoken";
+import config from "../config.js";
 
 //** Métodos para el CRUD **/
 
@@ -42,9 +44,13 @@ export const createInmueble = async (req, res) => {
     ubicacion,
     negocio,
     precio,
-    agente,
+    token,
   } = req.body;
   try {
+    const { id } = jwt.verify(token, config.secretKey)
+    
+    if(!id)throw new Error("Por favor verifique su sesion")
+
     object.descript1 = descript1;
     object.descript2 = descript2;
     object.description = description;
@@ -59,7 +65,7 @@ export const createInmueble = async (req, res) => {
     object.ubicacion = ubicacion;
     object.negocio = negocio;
     object.precio = precio;
-    object.agente = agente;
+    object.agente = id;
 
     if (req.files) {
       const image = req.files.image;
@@ -86,9 +92,9 @@ export const createInmueble = async (req, res) => {
     res.status(200).json({
       message: "¡Inmueble creado correctamente!",
     });
+
   } catch (error) {
-    console.log(error);
-    res.json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 //Actualizar un Inmueble

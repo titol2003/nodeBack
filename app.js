@@ -30,7 +30,7 @@ app.set("port", config.port);
 await connection()
 
 app.get("/", (req, res) => {
-  res.send("hello world");
+  res.send("hola mundo");
 });
 
 app.use('/email',Correos)
